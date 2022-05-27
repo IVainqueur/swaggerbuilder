@@ -1,0 +1,280 @@
+.Method {
+    padding: 4px 0;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 5px;
+    margin-top: 5px;
+    background: rgba(73,204,144,.1);
+}
+
+span.MethodName {
+    background: rgba(0,0,0,0.1);
+    color: rgb(110, 110, 110);
+    padding: 8px 15px;
+    border-radius: 4px;
+    text-align: center;
+    min-width: 100px;
+    /* margin-right: 10px; */
+}
+
+.MethodTitle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    padding: 0 4px;
+}
+
+.MethodContent{
+    height: 0;
+    overflow: hidden;
+    padding: 0px;
+}
+
+/* .MethodContent > div{
+    padding: 20px;
+} */
+
+.MethodContent .MethodParameters .MethodParametersTitle,
+.MethodContent .MethodResponses .MethodResponsesTitle
+ {
+    background: white;
+    margin: 10px 0;
+    padding: 20px;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.MethodParametersTitle span,
+.MethodResponsesTitle span
+ {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.MethodContent .MethodDescription,
+.MethodContent .MethodParameters > *:not(.MethodParametersTitle),
+.MethodContent .MethodResponses > *:not(.MethodResponsesTitle){
+    margin-top: 10px;
+    padding: 40px 20px;
+    display: block;
+    cursor: pointer;
+}
+
+span.MethodRoute {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.OpenMethod .DownwardArrow{
+    transform: translateY(-50%) rotate(180deg) !important;
+}
+
+.OpenMethod .MethodContent{
+    /* padding: 20px; */
+    height: fit-content;
+}
+
+
+/* 
+
+* Styling for the table (responses and parameters)
+
+*/
+
+.MethodParametersContent,
+.MethodResponsesContent{
+    padding: 20px !important;
+}
+
+.MethodParametersContent table,
+.MethodResponsesContent table {
+    border-collapse: collapse;
+    width: 100%;
+    display: none;
+}
+
+.MethodParametersContent table th, 
+.MethodParametersContent table td,
+.MethodResponsesContent table th, 
+.MethodResponsesContent table td {
+    padding: 010px 20px 20px 0;
+    vertical-align: baseline;
+    position: relative;
+}
+
+.MethodParametersContent table thead,
+.MethodResponsesContent table thead {
+    border-bottom: 1px solid #c4c4c4;
+}
+
+.MethodParametersContent table * ,
+.MethodResponsesContent table * {
+    text-align: left;
+    /* font-weight: 100; */
+}
+
+
+.MethodParametersContent table th, 
+.MethodResponsesContent table th {
+    font-size: 12px;
+}
+
+
+th:first-child, td:first-child {
+    width: 10%;
+}
+
+td:first-child{
+    font-weight: bold;
+}
+
+td:first-child > span.type {
+    font-weight: 100;
+}
+
+
+td:first-child > span.required{
+    color: red;
+    font-size: 10px;
+}
+
+td:first-child > span.in {
+    color: #c4c4c4;
+}
+
+.MethodParametersContent table td:focus,
+.MethodResponsesContent table td:focus {
+    padding-left: 10px;
+    vertical-align: baseline;
+    min-height: 300px;
+    height: 300px;
+    
+}
+
+table td .tools {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    display: flex;
+    gap: 10px;
+    transition: 1s ease;
+}
+
+table td .tools svg {
+    fill: white;
+    background: tomato;
+    height: 24px;
+    width: 24px;
+    padding: 4px;
+    border-radius: 12px;
+}
+
+table td .tool {
+    display: flex;
+    align-items: center;
+    /* gap: 5px; */
+    background: tomato;
+    color: white;
+    border-radius: 12px;
+    /* padding-right: 10px; */
+}
+
+.tool span {
+    color: white;
+    width: 0;
+    overflow: hidden;
+    height: 0;
+}
+
+table td .tool:hover span{
+    width: fit-content;
+    height: fit-content;
+    margin-left: 5px;
+    margin-right: 10px;
+}
+
+.MethodParametersContent table td > .tools,
+.MethodResponsesContent table td > .tools{
+    pointer-events: initial;
+    opacity: 0;
+}
+
+.MethodParametersContent table td:focus > .tools,
+.MethodResponsesContent table td:focus > .tools{
+    pointer-events: initial;
+    opacity: 1;
+}
+
+td.ActionTD {
+    width: 40px;
+    padding-left: 20px !important;
+}
+
+td.ActionTD > svg {
+    width: 24px;
+    height: 24px;
+    padding: 1px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 2px;
+}
+
+td.ActionTD > svg:hover {
+    transform: rotate(20deg);
+}
+
+td.ActionTD > .CancelRowBTN{
+    fill: #f93e3e;
+}
+
+td.ActionTD > .AddRowBTN{
+    fill: #62A03F;
+}
+
+
+.Switcher {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.Switcher > span:first-child {
+    border-right: 1px solid #c4c4c4;
+    padding-right: 10px;
+}
+
+.Switcher .selector.active{
+    font-weight: bold;
+}
+
+.JSONTemplate textarea {
+    background: rgb(51,51,51);
+    color: white;
+    padding: 10px;
+    resize: none;
+    min-width: 90%;
+    min-height: 200px;
+    letter-spacing: 1px;
+    font-size: 16px;
+    outline: none;
+    border: none;
+    border-radius: 2px;
+}
+
+.JSONTemplate .ActualContent{
+    position: relative;
+}
+
+.JSONTemplate .ActualContent .Model{
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    background: #c4c4c4;
+    border-radius: 2px;
+    white-space: pre;
+    display: none;
+    min-height: 200px;
+}

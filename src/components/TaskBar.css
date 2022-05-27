@@ -1,0 +1,8 @@
+.TaskBar{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 20px;
+}

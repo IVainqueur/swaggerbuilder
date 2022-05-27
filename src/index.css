@@ -1,0 +1,15 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  --green: #62a03f;
+  --black: #3b4151;
+  color: #3b4151;
+  font-family: sans-serif;
+  transition: .3s ease;
+}
+
+body{
+  height: 100vh;
+  width: 100%;
+}

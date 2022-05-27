@@ -1,0 +1,135 @@
+*[contenteditable]{
+    padding: 5px;
+    outline: none;
+}
+
+*[contenteditable]:hover{
+    border-radius: 2px;
+    background-color: rgba(0,0,0,0.04);
+}
+*[contenteditable]:focus{
+    border-radius: 2px;
+    background-color: rgba(0,0,0,0.1);
+}
+
+@media(prefers-color-scheme: dark){
+    *[contenteditable]:focus{
+        border-radius: 2px;
+        background-color: rgba(255, 255, 255, 0.6) !important;
+    }
+    
+}
+.App .Intro{
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    background-color: #fafafa;
+    
+}
+
+.App .Intro > div{
+    max-width: 1420px;
+    width: 100%;
+    margin: auto;
+}
+
+.App .Intro .AppTitleAndVersion{
+    position: relative;
+    
+}
+
+.App .Intro .AppTitleAndVersion div {
+    position: relative;
+    width: fit-content;
+}
+
+.AppTitleAndVersion div span.AppName{
+    font-weight: bold;
+    font-size: 2em;
+}
+
+.AppTitleAndVersion div span.AppVersion{
+    display: block;
+    width: fit-content;
+    background-color: var(--black);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 40px;
+    position: absolute;
+    top: 0;
+    left: calc(100% + 10px);
+    font-size: initial;
+}
+
+.BaseURL{
+    font-size: 12px;
+    color: var(--black);
+}
+
+.BaseURL pre{
+    color: var(--black);
+}
+
+.Description{
+    color: #676767;
+}
+
+.SchemesContainer{
+    box-shadow:  1px 1px 2px rgb(0 0 0 / 15%);
+    padding: 0 20px;
+}
+
+.Schemes{
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: white;
+    position: relative;
+    max-width: 1420px;
+    margin: auto;
+}
+
+.Schemes select{
+    min-width: 130px;
+    width: 130px;
+    height: 30px;
+    outline: 1px solid black;
+    border-radius: 2px;
+    padding: 5px 40px 5px 10px;
+    background: #f7f7f7 url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13.418 7.859a.695.695 0 0 1 .978 0 .68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969.695.695 0 0 1 .978 0L10 11l3.418-3.141z"/></svg>') right 1px center no-repeat;
+    appearance: none;
+}
+
+.Choices{
+    display: flex;
+    gap: 20px;
+}
+
+.Schemes p{
+    font-weight: bold;
+}
+
+.adder{
+    display: grid;
+    place-content: center;
+    width: 30px;
+    height: 30px;
+    font-weight: bold;
+    border-radius: 2px;
+    color: black;
+    background: rgba(0,0,0,0.2);
+    cursor: pointer;
+}
+
+.AddScheme{
+    width: fit-content;
+    padding: 5px 10px;
+}
+
+.AddScheme:hover, .addedScheme{
+    color: white;
+    background: var(--green);
+}

@@ -1,0 +1,130 @@
+.Tags{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1420px;
+    margin: auto;
+    align-items: center;
+    padding: 50px 20px 0px 20px;
+    position: relative;
+}
+.Tag{
+    width: 100%;
+    max-width: 1420px;
+    position: relative;
+    padding: 0px 20px 0px 50px;
+    margin-bottom: 20px;
+
+}
+
+.Tag .TagContent{
+    padding: 0 20px;
+    height: 0;
+    overflow: hidden;
+    
+}
+
+.TagTitle{
+    display: flex;
+    gap: 10px;
+    padding: 30px 10px 30px 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+    cursor: pointer;
+    position: relative;
+}
+
+/* .TagTitle > *{
+    pointer-events: none;
+} */
+
+.TagTitle:hover{
+    background-color: rgba(0,0,0,0.04);
+}
+
+.TagTitle .TagName{
+    font-weight: bold;
+}
+
+.DownwardArrow{
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.OpenTag .TagTitle svg{
+    transform: translateY(-50%) rotate(180deg) !important;
+}
+
+.OpenTag .TagContent{
+    padding: 0px;
+    height: fit-content;
+}
+
+.AddRequest {
+    position: absolute;
+    top: 50%;
+    right: calc(100% - 40px);
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    flex-direction: column-reverse;
+    padding: 0px 5px;
+}
+
+.AddRequest::after{
+    content: '';
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 90%;
+    width: 3px;
+    border-radius: 10px;
+    background: #c4c4c4;
+}
+
+.AddRequest:hover{
+    cursor: pointer;
+}
+
+.AddRequest svg{
+    fill: white;
+    stroke: white;
+}
+
+.AddRequest span {
+    writing-mode: vertical-lr;
+    transform: rotateX(180deg) rotateY(180deg);
+    height: 0;
+    overflow: hidden;
+}
+
+.AddRequest:hover span{
+    transition: .1s ease;
+    color: rgb(172, 26, 0);
+    height: initial;
+    margin-bottom: 10px;
+}
+
+.AddRequest:hover .adder{
+    background-color: rgb(172, 26, 0);
+}
+
+.AddRequest:hover::after{
+    background-color: rgb(172, 26, 0);
+}
+
+.AddTag {
+    width: 500px;
+    color: white;
+    background: tomato;
+    padding: 10px;
+    text-align: center;
+    max-width: 1420px;
+    margin: auto;
+}
+
+.AddTag:hover{
+    cursor: pointer;
+}
