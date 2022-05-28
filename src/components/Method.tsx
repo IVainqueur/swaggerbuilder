@@ -5,7 +5,10 @@ import {
     createNewTable,
     addRow,
     removeRow,
-    jsonTemplate
+    jsonTemplate,
+    makeModel,
+    addJSON,
+    addQuery
 } from "../handlers/methodHandlers";
 import type { i_methodProps } from "../handlers/methodHandlers";
 import { useState } from "react";
@@ -20,7 +23,13 @@ const Method = (props: Partial<i_methodProps>): JSX.Element => {
     const [isParamsTable, setParamsTable] = useState(false);
     const [isResponsesTable, setResponsesTable] = useState(false);
 
-    let actualParams = {}
+    let actualParams: any = {}
+    const getActualParams = ()=>{
+        return actualParams
+    }
+    const setActualParams = (newValue: any)=>{
+        actualParams = {...actualParams, [newValue.key]: newValue.value}
+    }
     const [responseContent, setResponseContent] = useState([<></>])
 
     const [params, setParams] = useState([
@@ -34,86 +43,11 @@ const Method = (props: Partial<i_methodProps>): JSX.Element => {
                     
                 </div>
                 <div className="tools">
-                    <span className="tool" key={"object"} onClick={(e: any)=>{
-                        let keys = Object.keys(e.currentTarget)
-                        type objectKey = keyof typeof keys
-                        let key = keys.find((x)=> x.includes('reactFiber')) as objectKey
-                        let reactDataKey = e.currentTarget[key].key
-                        let theDIV = e.currentTarget.parentElement.previousElementSibling
-                        theDIV.innerHTML = jsonTemplate
-                        theDIV.querySelector("textarea").addEventListener('keydown', (e1: any)=>{
-                            if((e1.currentTarget.scrollHeight > 200) && (e1.currentTarget.scrollHeight < 400)){
-                                e1.currentTarget.style.height = (e1.currentTarget.scrollHeight + 10) + "px"
-                            }
-                            if (e1.key === 'Tab') {
-                                e1.preventDefault();
-                                var start = e1.currentTarget.selectionStart;
-                                var end = e1.currentTarget.selectionEnd;
-                            
-                                // set textarea value to: text before caret + tab + text after caret
-                                e1.currentTarget.value = e1.currentTarget.value.substring(0, start) +
-                                  "\t" + e1.currentTarget.value.substring(end);
-                            
-                                // put caret at right position again
-                                e1.currentTarget.selectionStart =
-                                  e1.currentTarget.selectionEnd = start + 1;
-                              }
-                        })
-                        for(let selector of theDIV.querySelectorAll(".selector")){
-                            selector.addEventListener('click', (_e: any)=>{
-                                if(!selector.classList.contains("ModelSelector")){
-                                    theDIV.querySelector(".Model").style.display = "none"
-                                }
-                                document.querySelector('.Switcher .selector.active')?.classList.remove("active")
-                                _e.currentTarget.classList.add("active")
-                            })
-                        }
-                        theDIV.querySelector(".ModelSelector").addEventListener("click", async (e2: any)=>{
-                            console.log(actualParams)
-                            if(Object.keys(actualParams).length === 0) {
-                                let answer = await Swal.fire({
-                                    title: "No model created",
-                                    text: "Would you like to make the example a model?",
-                                    showDenyButton: true,
-                                    showConfirmButton: true,
-                                    denyButtonText: 'Nah!',
-                                    confirmButtonText: 'Yes'
-                                })
-                                if(answer.isConfirmed){
-                                    try{
-                                        let modelData = JSON.parse(theDIV.querySelector("textarea").value)
-                                        actualParams = modelData
-                                        console.log("New Params", actualParams)
-                                        theDIV.querySelector(".Model").textContent = JSON.stringify(modelData, undefined, 4)
-                                        theDIV.querySelector(".Model").style.display = "block"
-                                        Swal.fire({
-                                            title: "Done",
-                                            text: "Converted the example into a model",
-                                            icon: 'success'
-                                        })
-                                    }catch(e){
-                                        Swal.fire({
-                                            title: "Invalid JSON",
-                                            text: "Check if the data in the example is valid JSON data",
-                                            icon: 'error'
-                                        })
-                                        theDIV.querySelector(".ExampleSelector").click()
-                                    }
-                                }
-                            }
-                        })
-                    }}>
+                    <span className="tool" key={"object"} onClick={(e)=>{addJSON(e, getActualParams, setActualParams, e.currentTarget.parentElement?.parentElement?.parentElement?.id)}}>
                         <BiCodeCurly />
                         <span>Add JSON / form-data</span>
                     </span>
-                    <span className="tool" key={"query"} onClick={(e: any)=>{
-                        let keys = Object.keys(e.currentTarget)
-                        type objectKey = keyof typeof keys
-                        let key = keys.find((x)=> x.includes('reactFiber')) as objectKey
-                        let reactDataKey = e.currentTarget[key].key
-                        
-                        Swal.fire(`Asked for ${reactDataKey}`)
-                    }}>
+                    <span className="tool" key={"query"} onClick={(e)=>{addQuery(e)}}>
                         <BsQuestionLg />
                         <span>Add Query Param</span>
                     </span>
@@ -123,9 +57,7 @@ const Method = (props: Partial<i_methodProps>): JSX.Element => {
                 <IoIosClose
                     className="CancelRowBTN"
                     onClick={(e: any) => {
-                        let curRow =
-                            e.currentTarget.parentElement.parentElement;
-                        removeRow(curRow, setParams);
+                        removeRow(e.currentTarget.parentElement.parentElement, setParams);
                     }}
                 />{" "}
                 <IoIosAdd
@@ -133,7 +65,8 @@ const Method = (props: Partial<i_methodProps>): JSX.Element => {
                         addRow(
                             e.currentTarget.parentElement.parentElement,
                             "Name",
-                            setParams
+                            setParams,
+                            {actualParams: getActualParams, setActualParams}
                         );
                     }}
                     className="AddRowBTN"
@@ -142,20 +75,31 @@ const Method = (props: Partial<i_methodProps>): JSX.Element => {
         </tr>
     ]);
     const [responses, setResponses] = useState([
-        <tr>
+        <tr id={uuidGenerate()}>
             <td suppressContentEditableWarning={true} contentEditable>
                 Code 1
             </td>
             <td suppressContentEditableWarning={true} contentEditable>
                 Description 1
+                <div className="ActualResponses">
+                    
+                </div>
+                <div className="tools">
+                    <span className="tool" key={"object"} onClick={(e)=>{addJSON(e, getActualParams, setActualParams, e.currentTarget.parentElement?.parentElement?.parentElement?.id)}}>
+                        <BiCodeCurly />
+                        <span>Add JSON / form-data</span>
+                    </span>
+                    <span className="tool" key={"query"} onClick={(e)=>{addQuery(e)}}>
+                        <BsQuestionLg />
+                        <span>Add text / html response</span>
+                    </span>
+                </div>
             </td>
             <td className="ActionTD">
                 <IoIosClose
                     className="CancelRowBTN"
                     onClick={(e: any) => {
-                        let curRow =
-                            e.currentTarget.parentElement.parentElement;
-                        removeRow(curRow, setResponses);
+                        removeRow(e.currentTarget.parentElement.parentElement, setResponses);
                     }}
                 />{" "}
                 <IoIosAdd
@@ -163,7 +107,8 @@ const Method = (props: Partial<i_methodProps>): JSX.Element => {
                         addRow(
                             e.currentTarget.parentElement.parentElement,
                             "Code",
-                            setResponses
+                            setResponses,
+                            {actualParams: getActualParams, setActualParams}
                         );
                     }}
                     className="AddRowBTN"

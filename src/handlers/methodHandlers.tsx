@@ -1,5 +1,8 @@
-import {v4 as uuidGenerate} from 'uuid'
+import { v4 as uuidGenerate } from "uuid";
 import { IoIosAdd, IoIosClose } from "react-icons/io";
+import Swal from 'sweetalert2'
+import { BiCodeCurly } from "react-icons/bi";
+import { BsQuestionLg } from "react-icons/bs";
 
 interface i_method {
     accent: string;
@@ -10,6 +13,8 @@ interface i_methodProps {
     methodRoute: string;
     methodSummary: string;
 }
+
+// let actualParams: any = {}
 
 const methods: object = {
     DELETE: {
@@ -35,13 +40,12 @@ const methods: object = {
     }
 };
 
-
 const changeMethod = (e: any) => {
-    if (Object.keys(methods).includes(e.target.textContent)) {
+    if (Object.keys(methods).includes(e.target.textContent.toUpperCase())) {
         type objectKey = keyof typeof methods;
-        let key = e.target.textContent.toString() as objectKey;
+        let key = e.target.textContent.toUpperCase() as objectKey;
         let accentColor = (methods[key] as i_method).accent;
-        
+
         e.target.style.background = accentColor;
         e.target.style.color = "white";
         e.target.parentElement.parentElement.style.background = `${accentColor}1a`;
@@ -62,56 +66,86 @@ const changeMethod = (e: any) => {
 */
 
 const columns = {
-    "params": {
-        heads: ["Name", "Description"], 
+    params: {
+        heads: ["Name", "Description"],
         container: "MethodParametersContent"
     },
-    "responses": {
-        heads: ["Code", "Description"], 
+    responses: {
+        heads: ["Code", "Description"],
         container: "MethodResponsesContent"
     }
-}
+};
 
-const createNewTable = (e: any, paramOrResponse: string) =>{
-    if(!Object.keys(columns).includes(paramOrResponse)) throw new Error("Parameter 2 is unknown, It should either be \"responses\" or \"params\" ")
+const createNewTable = (e: any, paramOrResponse: string) => {
+    if (!Object.keys(columns).includes(paramOrResponse))
+        throw new Error(
+            'Parameter 2 is unknown, It should either be "responses" or "params" '
+        );
 
-    e.currentTarget.removeChild(e.currentTarget.firstElementChild)
+    e.currentTarget.removeChild(e.currentTarget.firstElementChild);
 
-    e.currentTarget.querySelector('table').style.display = "table"
+    e.currentTarget.querySelector("table").style.display = "table";
+};
 
-}
-
-const addRow = (currentTarget: Element, codeOrName: string, setter: any) => {
-    
+const addRow = (currentTarget: Element, codeOrName: string, setter: any, toPassOn: any) => {
     setter((prevValue: any) => {
-        let clickedIndex = prevValue.findIndex((x: any)=> x.props.id === currentTarget.id)
-        let beforeClicked = prevValue.slice(0, clickedIndex+1)
+        let clickedIndex = prevValue.findIndex(
+            (x: any) => x.props.id === currentTarget.id
+        );
+        let beforeClicked = prevValue.slice(0, clickedIndex + 1);
 
-        return beforeClicked.concat([ <tr id={uuidGenerate()}>
-            <td suppressContentEditableWarning={true} contentEditable>
-                {codeOrName} {prevValue.length + 1}
-            </td>
-            <td suppressContentEditableWarning={true} contentEditable>
-                Description {prevValue.length + 1}
-            </td>
-            <td className="ActionTD">
-                <IoIosClose className="CancelRowBTN" onClick={(e: any)=>{
-                        let curRow = e.currentTarget.parentElement.parentElement
-                        removeRow(curRow, setter)
-                    }}/> <IoIosAdd onClick={(e: any)=>{
-                    addRow(e.currentTarget.parentElement.parentElement, codeOrName, setter)
-                }} className="AddRowBTN" />
-            </td>
-        </tr>
-    ]).concat(prevValue.slice(clickedIndex+1))
-    })
-}
+        return beforeClicked
+            .concat([
+                <tr id={uuidGenerate()}>
+                    <td suppressContentEditableWarning={true} contentEditable>
+                        Name {prevValue.length + 1}
+                    </td>
+                    <td suppressContentEditableWarning={true} contentEditable>
+                        Description {prevValue.length + 1}
+                        <div className="ActualParams">
+                            
+                        </div>
+                        <div className="tools">
+                            <span className="tool" key={"object"} onClick={(e)=>addJSON(e, toPassOn.actualParams, toPassOn.setActualParams, e.currentTarget.parentElement?.parentElement?.parentElement?.id)}>
+                                <BiCodeCurly />
+                                <span>Add JSON / form-data</span>
+                            </span>
+                            <span className="tool" key={"query"} onClick={(e)=>{addQuery(e)}}>
+                                <BsQuestionLg />
+                                <span>Add Query Param</span>
+                            </span>
+                        </div>
+                    </td>
+                    <td className="ActionTD">
+                        <IoIosClose
+                            className="CancelRowBTN"
+                            onClick={(e: any) => {
+                                removeRow(e.currentTarget.parentElement.parentElement, setter);
+                            }}
+                        />{" "}
+                        <IoIosAdd
+                            onClick={(e: any) => {
+                                addRow(
+                                    e.currentTarget.parentElement.parentElement,
+                                    "Name",
+                                    setter,
+                                    toPassOn
+                                );
+                            }}
+                            className="AddRowBTN"
+                        />
+                    </td>
+                </tr>
+            ])
+            .concat(prevValue.slice(clickedIndex + 1));
+    });
+};
 
 const removeRow = (toRemove: any, setter: any) => {
-    setter((prev: any)=>{
-        return prev.filter((x: any) => x.props.id !== toRemove.id)
-    })
-}
+    setter((prev: any) => {
+        return prev.filter((x: any) => x.props.id !== toRemove.id);
+    });
+};
 
 const jsonTemplate = `
 <div class="JSONTemplate" contenteditable="false">
@@ -125,22 +159,146 @@ const jsonTemplate = `
         <div class="Model"></div>
     </div>
 </div>
-`
+`;
 
-const makeModel = (data: object)=>{
-    let model: object = {}
-    for(let key of Object.keys(data)){
-        type objectKey = keyof typeof data
-        key = key.toString() as objectKey
+const modelHTMLify = (model: object) => {
+    let html = "<p>{</p>";
+    Object.keys(model).forEach((key, i) => {
+        html += `
+        <div class="KeyValues">
+            <div class="Key">${key}</div> 
+            <div class="Values">
+                <span class="type">${Object.values(model)[i].type}</span>
+                <span class="example">example: ${Object.values(model)[i].example}</span>
+            </div>
+        </div>
+        `;
+    });
+
+    html += "<p>}</p>";
+
+
+    return html;
+};
+
+const makeModel = (data: object) => {
+    let model: object = {};
+    Object.keys(data).forEach((key, i) => {
+        // type objectKey = keyof typeof data
+        // key = key.toString() as objectKey
         Object.defineProperty(model, key, {
             value: {
-                example: data[key]
+                type: typeof Object.values(data)[i],
+                example: Object.values(data)[i]
+            },
+            configurable: true,
+            enumerable: true,
+            writable: false
+        });
+    });
+
+    return { model, htmlify: modelHTMLify };
+};
+
+const addJSON = (e: any, actualParams: any, setActualParams: any, id: any)=>{
+    let keys = Object.keys(e.currentTarget)
+    type objectKey = keyof typeof keys
+    let key = keys.find((x)=> x.includes('reactFiber')) as objectKey
+    let reactDataKey = e.currentTarget[key].key
+    let theDIV = e.currentTarget.parentElement.previousElementSibling
+    theDIV.innerHTML = jsonTemplate
+    theDIV.querySelector("textarea").addEventListener('keydown', (e1: any)=>{
+        if((e1.currentTarget.scrollHeight > 200) && (e1.currentTarget.scrollHeight < 400)){
+            e1.currentTarget.style.height = (e1.currentTarget.scrollHeight + 10) + "px"
+        }
+        if (e1.key === 'Tab') {
+            e1.preventDefault();
+            var start = e1.currentTarget.selectionStart;
+            var end = e1.currentTarget.selectionEnd;
+        
+            // set textarea value to: text before caret + tab + text after caret
+            e1.currentTarget.value = e1.currentTarget.value.substring(0, start) +
+              "\t" + e1.currentTarget.value.substring(end);
+        
+            // put caret at right position again
+            e1.currentTarget.selectionStart =
+              e1.currentTarget.selectionEnd = start + 1;
+          }
+    })
+    for(let selector of theDIV.querySelectorAll(".selector")){
+        selector.addEventListener('click', (_e: any)=>{
+            if(!selector.classList.contains("ModelSelector")){
+                theDIV.querySelector(".Model").style.display = "none"
+                theDIV.querySelector("textarea").style.display = "revert"
+            }else{
+                theDIV.querySelector(".Model").style.display = "flex"
+                theDIV.querySelector("textarea").style.display = "none"
             }
+            document.querySelector('.Switcher .selector.active')?.classList.remove("active")
+            _e.currentTarget.classList.add("active")
         })
     }
+    theDIV.querySelector(".ModelSelector").addEventListener("click", async (e2: any)=>{
+        /* actualParams is a function that returns the current value of the actual 'actualParams' object */
+        if(!Object.keys(actualParams()).includes(id)) {
+            let answer = await Swal.fire({
+                title: "No model created",
+                text: "Would you like to make the example a model?",
+                showDenyButton: true,
+                showConfirmButton: true,
+                denyButtonText: 'Nah!',
+                confirmButtonText: 'Yes'
+            })
+            if(answer.isConfirmed){
+                try{
+                    let modelData = JSON.parse(theDIV.querySelector("textarea").value)
+                    // actualParams = makeModel(modelData)
+                    setActualParams({key: id, value: makeModel(modelData)})
+                    /* Use modelData as a template while actualParams hasn't been updated */
+                    modelData = makeModel(modelData)
+                    
+                    theDIV.querySelector(".Model").innerHTML = `${modelData.htmlify(modelData.model)}`
+
+                    theDIV.querySelector(".Model").style.display = "flex"
+                    theDIV.querySelector("textarea").style.display = "none"
+                    Swal.fire({
+                        title: "Done",
+                        text: "Converted the example into a model",
+                        icon: 'success'
+                    })
+                }catch(e){
+                    console.log(e)
+                    Swal.fire({
+                        title: "Invalid JSON",
+                        text: "Check if the data in the example is valid JSON data",
+                        icon: 'error'
+                    })
+                    theDIV.querySelector(".ExampleSelector").click()
+                }
+            }
+        }
+    })
 }
 
 
+const addQuery = (e: any)=>{
+    let keys = Object.keys(e.currentTarget)
+    type objectKey = keyof typeof keys
+    let key = keys.find((x)=> x.includes('reactFiber')) as objectKey
+    let reactDataKey = e.currentTarget[key].key
+    
+    Swal.fire(`Asked for ${reactDataKey}`)
+}
 
-export { changeMethod, createNewTable, addRow, removeRow, jsonTemplate}
-export type {i_method, i_methodProps}
+
+export {
+    changeMethod,
+    createNewTable,
+    addRow,
+    removeRow,
+    jsonTemplate,
+    makeModel,
+    addJSON,
+    addQuery
+};
+export type { i_method, i_methodProps };

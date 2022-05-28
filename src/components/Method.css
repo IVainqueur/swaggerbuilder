@@ -13,6 +13,7 @@ span.MethodName {
     border-radius: 4px;
     text-align: center;
     min-width: 100px;
+    text-transform: uppercase;
     /* margin-right: 10px; */
 }
 
@@ -29,10 +30,6 @@ span.MethodName {
     overflow: hidden;
     padding: 0px;
 }
-
-/* .MethodContent > div{
-    padding: 20px;
-} */
 
 .MethodContent .MethodParameters .MethodParametersTitle,
 .MethodContent .MethodResponses .MethodResponsesTitle
@@ -144,8 +141,8 @@ td:first-child > span.in {
     color: #c4c4c4;
 }
 
-.MethodParametersContent table td:focus,
-.MethodResponsesContent table td:focus {
+.MethodParametersContent table td:nth-of-type(2):focus,
+.MethodResponsesContent table td:nth-of-type(2):focus {
     padding-left: 10px;
     vertical-align: baseline;
     min-height: 300px;
@@ -268,13 +265,39 @@ td.ActionTD > .AddRowBTN{
 }
 
 .JSONTemplate .ActualContent .Model{
-    position: absolute;
-    top: 0;
-    left: 0;
     padding: 20px;
+    padding-right: 50px;
+    width: fit-content;
     background: #c4c4c4;
     border-radius: 2px;
     white-space: pre;
     display: none;
     min-height: 200px;
+    flex-direction: column;
+    gap: 10px;
+    
+}
+
+.KeyValues {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.KeyValues .Key {
+    min-width: 100px;
+}
+
+.KeyValues .Values {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.Values span.type {
+    color: #55a;
+}
+
+.Values span.example {
+    color: rgba(0,0,0,0.4);
 }
