@@ -11,15 +11,16 @@ import {
     addQuery
 } from "../handlers/methodHandlers";
 import type { i_methodProps } from "../handlers/methodHandlers";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { IoIosAdd, IoIosClose } from "react-icons/io";
 import { BiCodeCurly } from "react-icons/bi";
 import { BsQuestionLg } from "react-icons/bs";
 import { v4 as uuidGenerate } from "uuid";
-import Swal from "sweetalert2";
+import { modelsContext, modelsContextInterface } from "../App";
 
 
 const Method = (props: Partial<i_methodProps>): JSX.Element => {
+    const [models, setModels] = useContext<modelsContextInterface | any>(modelsContext)
     const [isParamsTable, setParamsTable] = useState(false);
     const [isResponsesTable, setResponsesTable] = useState(false);
 
@@ -43,13 +44,13 @@ const Method = (props: Partial<i_methodProps>): JSX.Element => {
                     
                 </div>
                 <div className="tools">
-                    <span className="tool" key={"object"} onClick={(e)=>{addJSON(e, getActualParams, setActualParams, e.currentTarget.parentElement?.parentElement?.parentElement?.id)}}>
+                    <span className="tool" key={"object"} onClick={(e)=>{addJSON(e, getActualParams, setActualParams, e.currentTarget.parentElement?.parentElement?.parentElement?.id, [models, setModels])}}>
                         <BiCodeCurly />
                         <span>Add JSON / form-data</span>
                     </span>
                     <span className="tool" key={"query"} onClick={(e)=>{addQuery(e)}}>
                         <BsQuestionLg />
-                        <span>Add Query Param</span>
+                        <span>Add Query Param, header, ...</span>
                     </span>
                 </div>
             </td>
@@ -66,7 +67,8 @@ const Method = (props: Partial<i_methodProps>): JSX.Element => {
                             e.currentTarget.parentElement.parentElement,
                             "Name",
                             setParams,
-                            {actualParams: getActualParams, setActualParams}
+                            {actualParams: getActualParams, setActualParams},
+                            [models, setModels]
                         );
                     }}
                     className="AddRowBTN"
@@ -85,7 +87,7 @@ const Method = (props: Partial<i_methodProps>): JSX.Element => {
                     
                 </div>
                 <div className="tools">
-                    <span className="tool" key={"object"} onClick={(e)=>{addJSON(e, getActualParams, setActualParams, e.currentTarget.parentElement?.parentElement?.parentElement?.id)}}>
+                    <span className="tool" key={"object"} onClick={(e)=>{addJSON(e, getActualParams, setActualParams, e.currentTarget.parentElement?.parentElement?.parentElement?.id, [models, setModels])}}>
                         <BiCodeCurly />
                         <span>Add JSON / form-data</span>
                     </span>
@@ -108,7 +110,8 @@ const Method = (props: Partial<i_methodProps>): JSX.Element => {
                             e.currentTarget.parentElement.parentElement,
                             "Code",
                             setResponses,
-                            {actualParams: getActualParams, setActualParams}
+                            {actualParams: getActualParams, setActualParams},
+                            [models, setModels]
                         );
                     }}
                     className="AddRowBTN"

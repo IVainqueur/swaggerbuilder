@@ -68,9 +68,9 @@ span.MethodRoute {
     transform: translateY(-50%) rotate(180deg) !important;
 }
 
-.OpenMethod .MethodContent{
-    /* padding: 20px; */
+.OpenMethod .MethodContent, .OpenMethod .ModelsContent{
     height: fit-content;
+    padding: revert;
 }
 
 
@@ -268,7 +268,7 @@ td.ActionTD > .AddRowBTN{
     padding: 20px;
     padding-right: 50px;
     width: fit-content;
-    background: #c4c4c4;
+    background: #e1e1e1;
     border-radius: 2px;
     white-space: pre;
     display: none;
@@ -282,10 +282,12 @@ td.ActionTD > .AddRowBTN{
     display: flex;
     flex-direction: row;
     gap: 20px;
+    margin-left: 20px;
 }
 
 .KeyValues .Key {
     min-width: 100px;
+    font-weight: bold;
 }
 
 .KeyValues .Values {

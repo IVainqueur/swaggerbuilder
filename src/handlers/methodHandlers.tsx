@@ -3,6 +3,8 @@ import { IoIosAdd, IoIosClose } from "react-icons/io";
 import Swal from 'sweetalert2'
 import { BiCodeCurly } from "react-icons/bi";
 import { BsQuestionLg } from "react-icons/bs";
+import { useContext } from "react";
+import { modelsContext, modelsContextInterface } from "../App";
 
 interface i_method {
     accent: string;
@@ -14,7 +16,6 @@ interface i_methodProps {
     methodSummary: string;
 }
 
-// let actualParams: any = {}
 
 const methods: object = {
     DELETE: {
@@ -87,7 +88,7 @@ const createNewTable = (e: any, paramOrResponse: string) => {
     e.currentTarget.querySelector("table").style.display = "table";
 };
 
-const addRow = (currentTarget: Element, codeOrName: string, setter: any, toPassOn: any) => {
+const addRow = (currentTarget: Element, codeOrName: string, setter: any, toPassOn: any, modelData: any) => {
     setter((prevValue: any) => {
         let clickedIndex = prevValue.findIndex(
             (x: any) => x.props.id === currentTarget.id
@@ -106,7 +107,7 @@ const addRow = (currentTarget: Element, codeOrName: string, setter: any, toPassO
                             
                         </div>
                         <div className="tools">
-                            <span className="tool" key={"object"} onClick={(e)=>addJSON(e, toPassOn.actualParams, toPassOn.setActualParams, e.currentTarget.parentElement?.parentElement?.parentElement?.id)}>
+                            <span className="tool" key={"object"} onClick={(e)=>addJSON(e, toPassOn.actualParams, toPassOn.setActualParams, e.currentTarget.parentElement?.parentElement?.parentElement?.id, modelData)}>
                                 <BiCodeCurly />
                                 <span>Add JSON / form-data</span>
                             </span>
@@ -129,7 +130,8 @@ const addRow = (currentTarget: Element, codeOrName: string, setter: any, toPassO
                                     e.currentTarget.parentElement.parentElement,
                                     "Name",
                                     setter,
-                                    toPassOn
+                                    toPassOn,
+                                    modelData
                                 );
                             }}
                             className="AddRowBTN"
@@ -162,13 +164,14 @@ const jsonTemplate = `
 `;
 
 const modelHTMLify = (model: object) => {
+    // let modelName = `<span class="ModelName" contentEditable>${model.ModelName}</span>`
     let html = "<p>{</p>";
     Object.keys(model).forEach((key, i) => {
         html += `
         <div class="KeyValues">
-            <div class="Key">${key}</div> 
+            <div class="Key" contenteditable>${key}</div> 
             <div class="Values">
-                <span class="type">${Object.values(model)[i].type}</span>
+                <span class="type" contenteditable>${Object.values(model)[i].type}</span>
                 <span class="example">example: ${Object.values(model)[i].example}</span>
             </div>
         </div>
@@ -200,7 +203,8 @@ const makeModel = (data: object) => {
     return { model, htmlify: modelHTMLify };
 };
 
-const addJSON = (e: any, actualParams: any, setActualParams: any, id: any)=>{
+const addJSON = (e: any, actualParams: any, setActualParams: any, id: any, modelData: any)=>{
+    let [models, setModels] = modelData
     let keys = Object.keys(e.currentTarget)
     type objectKey = keyof typeof keys
     let key = keys.find((x)=> x.includes('reactFiber')) as objectKey
@@ -254,9 +258,13 @@ const addJSON = (e: any, actualParams: any, setActualParams: any, id: any)=>{
                     let modelData = JSON.parse(theDIV.querySelector("textarea").value)
                     // actualParams = makeModel(modelData)
                     setActualParams({key: id, value: makeModel(modelData)})
+
                     /* Use modelData as a template while actualParams hasn't been updated */
                     modelData = makeModel(modelData)
                     
+                    setModels((prevValue: any)=>{
+                        return [...prevValue, {key: id, modelData}]
+                    })
                     theDIV.querySelector(".Model").innerHTML = `${modelData.htmlify(modelData.model)}`
 
                     theDIV.querySelector(".Model").style.display = "flex"
