@@ -43,3 +43,10 @@
     font-weight: bold;
     margin-left: -10px;
 }
+
+.ModelContainer {
+    padding: 20px;
+    background: #ededed;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}

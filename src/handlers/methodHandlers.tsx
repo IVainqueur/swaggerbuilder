@@ -3,8 +3,6 @@ import { IoIosAdd, IoIosClose } from "react-icons/io";
 import Swal from 'sweetalert2'
 import { BiCodeCurly } from "react-icons/bi";
 import { BsQuestionLg } from "react-icons/bs";
-import { useContext } from "react";
-import { modelsContext, modelsContextInterface } from "../App";
 
 interface i_method {
     accent: string;
