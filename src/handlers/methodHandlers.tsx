@@ -203,13 +203,15 @@ const makeModel = (data: object) => {
 };
 
 const addJSON = (e: any, actualParams: any, setActualParams: any, id: any, modelData: any)=>{
-    let [models, setModels] = modelData
+    let [, setModels] = modelData
     let keys = Object.keys(e.currentTarget)
+
     type objectKey = keyof typeof keys
     let key = keys.find((x)=> x.includes('reactFiber')) as objectKey
-    let reactDataKey = e.currentTarget[key].key
+
     let theDIV = e.currentTarget.parentElement.previousElementSibling
     theDIV.innerHTML = jsonTemplate
+    
     theDIV.querySelector("textarea").addEventListener('keydown', (e1: any)=>{
         if((e1.currentTarget.scrollHeight > 200) && (e1.currentTarget.scrollHeight < 400)){
             e1.currentTarget.style.height = (e1.currentTarget.scrollHeight + 10) + "px"
@@ -228,6 +230,7 @@ const addJSON = (e: any, actualParams: any, setActualParams: any, id: any, model
               e1.currentTarget.selectionEnd = start + 1;
           }
     })
+
     for(let selector of theDIV.querySelectorAll(".selector")){
         selector.addEventListener('click', (_e: any)=>{
             if(!selector.classList.contains("ModelSelector")){
@@ -241,6 +244,7 @@ const addJSON = (e: any, actualParams: any, setActualParams: any, id: any, model
             _e.currentTarget.classList.add("active")
         })
     }
+
     theDIV.querySelector(".ModelSelector").addEventListener("click", async (e2: any)=>{
         /* actualParams is a function that returns the current value of the actual 'actualParams' object */
         if(!Object.keys(actualParams()).includes(id)) {

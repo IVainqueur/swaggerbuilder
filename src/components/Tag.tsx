@@ -16,12 +16,18 @@ interface TagProps {
 
 const Tag = (props: Partial<TagProps>): JSX.Element => {
     let [tagsArr,] = useContext<modelsContextInterface | any>(modelsContext).tags
+
+
     let methodProps = {
         methodName: "UNSET",
         methodRoute: "api/some/route",
         methodSummary: "Some brief description..."
     }
+
+
     const [methods, setMethods] = useState([<></>])
+
+
     const addMethod = (e: any)=>{
         e.currentTarget.parentElement.classList.add("OpenTag")
         setMethods((prevMethods)=> {
@@ -32,16 +38,32 @@ const Tag = (props: Partial<TagProps>): JSX.Element => {
             return [...prevMethods, <Method {...methodProps} ref={methodRef}/>]
         })
     }
+
+
     return (
         <div className="Tag">
             <div className="TagTitle" onClick={TagTitleClicked.bind(this)}>
-                <p className="TagName" suppressContentEditableWarning={true} contentEditable>{props.name}</p>
-                <p className="TagSummary" suppressContentEditableWarning={true} contentEditable>{props.summary}</p>
+                <p className="TagName" 
+                suppressContentEditableWarning={true} 
+                contentEditable>
+                    {props.name}
+                </p>
+
+
+                <p className="TagSummary" 
+                suppressContentEditableWarning={true} 
+                contentEditable>
+                    {props.summary}
+                </p>
+
+
                 <FaAngleDown className="DownwardArrow" />
             </div>
+
             <div className="TagContent">
                 {methods.map(x => x)}
             </div>
+            
             <div className="AddRequest" onClick={(e)=>{addMethod(e)}}>
                 <IoIosAdd className="adder" />
                 <span>Add a method</span>

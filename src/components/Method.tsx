@@ -17,18 +17,24 @@ import { v4 as uuidGenerate } from "uuid";
 import { modelsContext, modelsContextInterface } from "../App";
 
 
+
+
 const Method = (props: Partial<i_methodProps>): JSX.Element => {
     const [models, setModels] = useContext<modelsContextInterface | any>(modelsContext).models
+
     const [isParamsTable, setParamsTable] = useState(false);
     const [isResponsesTable, setResponsesTable] = useState(false);
 
     let actualParams: any = {}
+
     const getActualParams = ()=>{
         return actualParams
     }
+
     const setActualParams = (newValue: any)=>{
         actualParams = {...actualParams, [newValue.key]: newValue.value}
     }
+
     // const [responseContent, setResponseContent] = useState([<></>])
 
     const [params, setParams] = useState([
@@ -42,7 +48,9 @@ const Method = (props: Partial<i_methodProps>): JSX.Element => {
                     
                 </div>
                 <div className="tools">
-                    <span className="tool" key={"object"} onClick={(e)=>{addJSON(e, getActualParams, setActualParams, e.currentTarget.parentElement?.parentElement?.parentElement?.id, [models, setModels])}}>
+                    <span className="tool" key={"object"} onClick={(e)=>{
+                        addJSON(e, getActualParams, setActualParams, e.currentTarget.parentElement?.parentElement?.parentElement?.id, [models, setModels])
+                    }}>
                         <BiCodeCurly />
                         <span>Add JSON / form-data</span>
                     </span>
@@ -101,8 +109,10 @@ const Method = (props: Partial<i_methodProps>): JSX.Element => {
                     onClick={(e: any) => {
                         removeRow(e.currentTarget.parentElement.parentElement, setResponses);
                     }}
-                />{" "}
+                />
+                {" "}
                 <IoIosAdd
+                    className="AddRowBTN"
                     onClick={(e: any) => {
                         addRow(
                             e.currentTarget.parentElement.parentElement,
@@ -112,7 +122,6 @@ const Method = (props: Partial<i_methodProps>): JSX.Element => {
                             [models, setModels]
                         );
                     }}
-                    className="AddRowBTN"
                 />
             </td>
         </tr>
