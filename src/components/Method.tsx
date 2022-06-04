@@ -5,8 +5,6 @@ import {
     createNewTable,
     addRow,
     removeRow,
-    jsonTemplate,
-    makeModel,
     addJSON,
     addQuery
 } from "../handlers/methodHandlers";
@@ -20,7 +18,7 @@ import { modelsContext, modelsContextInterface } from "../App";
 
 
 const Method = (props: Partial<i_methodProps>): JSX.Element => {
-    const [models, setModels] = useContext<modelsContextInterface | any>(modelsContext)
+    const [models, setModels] = useContext<modelsContextInterface | any>(modelsContext).models
     const [isParamsTable, setParamsTable] = useState(false);
     const [isResponsesTable, setResponsesTable] = useState(false);
 
@@ -31,7 +29,7 @@ const Method = (props: Partial<i_methodProps>): JSX.Element => {
     const setActualParams = (newValue: any)=>{
         actualParams = {...actualParams, [newValue.key]: newValue.value}
     }
-    const [responseContent, setResponseContent] = useState([<></>])
+    // const [responseContent, setResponseContent] = useState([<></>])
 
     const [params, setParams] = useState([
         <tr id={uuidGenerate()}>
@@ -77,7 +75,7 @@ const Method = (props: Partial<i_methodProps>): JSX.Element => {
         </tr>
     ]);
     const [responses, setResponses] = useState([
-        <tr id={uuidGenerate()}>
+        <tr id={uuidGenerate()} >
             <td suppressContentEditableWarning={true} contentEditable>
                 Code 1
             </td>

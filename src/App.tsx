@@ -1,3 +1,4 @@
+// import './config/config'
 import React, { createContext, useState } from "react";
 import "./App.css";
 import NavBar from "./components/NavBar";
@@ -13,7 +14,7 @@ interface modelsContextInterface  {
 }
 
 
-const modelsContext = createContext<modelsContextInterface | []>([]);
+const modelsContext = createContext<modelsContextInterface | {}>({});
 
 const App = (): JSX.Element => {
     let models: any = useState([]);
@@ -24,8 +25,13 @@ const App = (): JSX.Element => {
     let [tags, setTags] = useState<any>([
         
     ]);
+    let tagsArr: any = []
+    const setTagsArr = (newValue: object)=>{
+        tagsArr.push(newValue)
+    }
+
     return (
-        <modelsContext.Provider value={models}>
+        <modelsContext.Provider value={{models, tags: [tagsArr, setTagsArr]}}>
             <div className="App" spellCheck="false">
                 <NavBar />
                 {/* <TaskBar /> */}
@@ -33,10 +39,14 @@ const App = (): JSX.Element => {
                 <div className="Tags">{tags.map((x: any) => x)}</div>
                 <div className="AddTag"
                     onClick={() => {
-                        setTags((prev: any) => [
-                            ...prev,
-                            [<Tag {...TagProps} key={uuidGenerate()} />]
-                        ]);
+                        setTags((prev: any) => {
+                            const key = uuidGenerate()
+                            setTagsArr({key})
+                            return [
+                                ...prev,
+                                [<Tag {...{tagKey: key, ...TagProps}} key={key} />]
+                            ]
+                        });
                     }}
                 >
                     Add Tag

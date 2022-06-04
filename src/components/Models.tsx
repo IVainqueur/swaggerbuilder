@@ -5,7 +5,7 @@ import Model from "./Model"
 import "./Models.css" 
 
 const Models = ()=>{
-    const [models, setModels] = useContext<modelsContextInterface | any>(modelsContext)
+    const [models,] = useContext<modelsContextInterface | any>(modelsContext).models
     return (
         <div className="ModelsContainer">
             <div className="ModelsTitle" onClick={(e: any) => {
@@ -18,7 +18,7 @@ const Models = ()=>{
                 <FaAngleDown className="DownwardArrow" />
             </div>
             <div className="ModelsContent">
-                {models.map((x: any)=>{
+                {models.length === 0 ? <p>No models created yet</p>: models.map((x: any)=>{
                     console.log(x);
                 return <Model content={x.modelData.htmlify(x.modelData.model)} ModelName={x.key}/>
                 })}

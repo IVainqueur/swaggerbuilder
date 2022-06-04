@@ -12,6 +12,7 @@ interface i_methodProps {
     methodName: string;
     methodRoute: string;
     methodSummary: string;
+    ref: React.RefObject<unknown>
 }
 
 

@@ -1,27 +1,23 @@
+import { SERVER_URI } from "../config/config";
+
 const generateSwagger = async () => {
     /* Gather the info */
     let data: any;
     // 1. THE VERSION
-    data.swagger = "2.0"
-    // 2. SUMMARY INFO
+    data.swagger = "2.0";
+    // 2.1 GET THE METHODS
     
+
     /* Send the request */
 
-    let response = await fetch("http://localhost:1000/nocors", {
+    let response = await fetch(`${SERVER_URI}/build`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-            url: "http://localhost/build",
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: {
-                ...data
-            }
-        })
+        body: {
+            ...data
+        }
     });
 };
 
